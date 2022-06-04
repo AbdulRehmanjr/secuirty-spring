@@ -30,7 +30,7 @@ public class userDetailServiceimpl implements UserDetailsService{
             logger.error("User not found");
             return null;
         }
-        return new User(resultUser.getUserName(),resultUser.getUserPassword(),resultUser.getUserRoles());
+        return resultUser;
     }
 
 

@@ -69,10 +69,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
             }
         }else{
             log.error("Token not valide");
-        }
-        log.info("Before filter chaining");       
+        }     
     filterChain.doFilter(request, response);
-    log.info("After filter chaining");
+   
     }
     
     

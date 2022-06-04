@@ -1,5 +1,6 @@
 package com.secuirty.secuirtymanagement.model;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -20,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "USERTABLE")
-public class user  {
+public class user implements UserDetails {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -93,12 +97,51 @@ public class user  {
     public void setUserRoles(Set<userRole> userRoles) {
         this.userRoles = userRoles;
     }
-  
 
+ 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        
+        Set<authority> auth = new HashSet<>();
+        this.userRoles.forEach(userRole -> {
+            auth.add(new authority(userRole.getRole().getRoleName()));
+        }
+        );
+        
+       
+        return auth;
+    }
+    @Override
+    public boolean isAccountNonExpired() {
+        
+        return true;
+    }
+    @Override
+    public boolean isAccountNonLocked() {
+        
+        return true;
+    }
+    @Override
+    public boolean isCredentialsNonExpired() {
+        
+        return true;
+    }
     @Override
     public String toString() {
         return "user [email=" + email + ", enabled=" + enabled + ", firstName=" + firstName + ", lastName=" + lastName
                 + ", phone=" + phone + ", userId=" + userId + ", userName=" + userName + ", userPassword="
                 + userPassword + ", userRoles=" + userRoles + "]";
     }
+    @Override
+    public String getPassword() {
+        
+        return this.getUserName();
+    }
+    @Override
+    public String getUsername() {
+        
+        return this.getUserPassword();
+    }
+
+  
 }

@@ -1,5 +1,7 @@
 package com.secuirty.secuirtymanagement.model;
 
+
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -8,13 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.springframework.security.core.GrantedAuthority;
 
 
 
 @Entity
 @Table(name = "USERROLETABLE")
-public class userRole implements GrantedAuthority{
+public class userRole  {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +26,6 @@ public class userRole implements GrantedAuthority{
     @ManyToOne
     private role Role;
 
-    @Override
-    public String toString() {
-        return "userRole [Role=" + Role + ", User=" + User + ", userRoleId=" + userRoleId + "]";
-    }
 
     public user getUser() {
         return User;
@@ -46,9 +43,11 @@ public class userRole implements GrantedAuthority{
         Role = role;
     }
 
+
     @Override
-    public String getAuthority() {
-       
-        return this.getRole().getRoleName();
+    public String toString() {
+        return "userRole [Role=" + Role + ", User=" + User + ", userRoleId=" + userRoleId + "]";
     }
+
+ 
 }

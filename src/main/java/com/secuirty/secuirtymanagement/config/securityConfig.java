@@ -62,7 +62,7 @@ public class  securityConfig {
         .anonymous()
         .and()
         .authorizeRequests()
-        .antMatchers("/user/add","/user/show","/token/generate-token").permitAll()
+        .antMatchers("/user/add","/user/show","/token/generate-token","/token/current-user").permitAll()
         .antMatchers("/user/protected","/user/all").hasAnyAuthority("ADMIN")
         .antMatchers(HttpMethod.OPTIONS).permitAll()
         .anyRequest().authenticated()
