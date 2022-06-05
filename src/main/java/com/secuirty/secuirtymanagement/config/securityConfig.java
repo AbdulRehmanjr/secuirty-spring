@@ -13,18 +13,19 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 @EnableWebSecurity
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class  securityConfig {
+public class  securityConfig implements WebMvcConfigurer{
 
 
     @Autowired
@@ -58,16 +59,14 @@ public class  securityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
-        .csrf().disable()
-        .anonymous()
+        .cors()
         .and()
+        .csrf().disable()
         .authorizeRequests()
-        .antMatchers("/user/add","/user/show","/token/generate-token","/token/current-user").permitAll()
+        .antMatchers("/user/add","/user/show","/user/**","/token/generate-token","/token/current-user").permitAll()
         .antMatchers("/user/protected","/user/all").hasAnyAuthority("ADMIN")
         .antMatchers(HttpMethod.OPTIONS).permitAll()
         .anyRequest().authenticated()
-        .and()
-        .cors()
         .and()
         .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
         .and()
@@ -76,15 +75,12 @@ public class  securityConfig {
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-    // @Bean
-    // public WebSecurityCustomizer webSecurityCustomizer(){
-    //     return (web)->{
-    //         web.ignoring().antMatchers();
-    //     };
-    // }
+    
 
-  
-        
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**");
+    }
 
 }
     

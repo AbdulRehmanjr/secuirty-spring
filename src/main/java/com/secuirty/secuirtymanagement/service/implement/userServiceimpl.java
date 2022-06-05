@@ -1,5 +1,6 @@
 package com.secuirty.secuirtymanagement.service.implement;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class userServiceimpl implements userService{
@@ -25,7 +27,7 @@ public class userServiceimpl implements userService{
     private PasswordEncoder encoder;
     
     @Override
-    public user addUser(user User, Set<userRole> roles) {
+    public user addUser(MultipartFile picture, user User, Set<userRole> roles) {
 
         user searchUser = this.userRepo.findByUserName(User.getUserName());
 
@@ -33,12 +35,17 @@ public class userServiceimpl implements userService{
             log.error("User already exists");
             return null;
         }
-        else{
             User.getUserRoles().addAll(roles);
             User.setUserPassword(encoder.encode(User.getUserPassword()));
+            try {
+                User.setUserDp(picture.getBytes());
+                User.setDpType(picture.getContentType());
+            } catch (IOException e) {      
+                log.error("error in saving blob profile picture");
+                e.printStackTrace();
+            }
             searchUser = this.userRepo.save(User);
             log.info("User created with Role : "+searchUser.getUserRoles().iterator().next().getRole().getRoleName());
-        }
 
         return searchUser;
     }

@@ -1,5 +1,6 @@
 package com.secuirty.secuirtymanagement.model;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -35,7 +37,13 @@ public class user implements UserDetails {
     private String phone;
     private String userName;
     private String userPassword;
+    @Lob
+    private byte[] userDp;
+    private String DpType;
+   
+
     private boolean enabled = true;
+    
     
     
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "User")
@@ -97,7 +105,12 @@ public class user implements UserDetails {
     public void setUserRoles(Set<userRole> userRoles) {
         this.userRoles = userRoles;
     }
-
+    public String getDpType() {
+        return DpType;
+    }
+    public void setDpType(String dpType) {
+        DpType = dpType;
+    }
  
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -126,12 +139,7 @@ public class user implements UserDetails {
         
         return true;
     }
-    @Override
-    public String toString() {
-        return "user [email=" + email + ", enabled=" + enabled + ", firstName=" + firstName + ", lastName=" + lastName
-                + ", phone=" + phone + ", userId=" + userId + ", userName=" + userName + ", userPassword="
-                + userPassword + ", userRoles=" + userRoles + "]";
-    }
+
     @Override
     public String getPassword() {
         
@@ -142,6 +150,17 @@ public class user implements UserDetails {
         
         return this.getUserPassword();
     }
+    public byte[] getUserDp() {
+        return userDp;
+    }
+    public void setUserDp(byte[] userDp) {
+        this.userDp = userDp;
+    }
 
-  
+    @Override
+    public String toString() {
+        return "email=" + email + ", enabled=" + enabled + ", firstName=" + firstName
+                + ", lastName=" + lastName + ", phone=" + phone + ", userId="
+                + userId + ", userName=" + userName + ", userPassword=" + userPassword + ", userRoles=" + userRoles.iterator().next().getRole().getRoleName();
+    }
 }

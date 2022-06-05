@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "ROLETABLE")
 public class role {
@@ -22,6 +24,7 @@ public class role {
     private String roleName;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "Role")
+    @JsonIgnore
     private Set<userRole> userRoles = new HashSet<>();
 
     public long getRoleId() {
@@ -44,7 +47,8 @@ public class role {
     }
     @Override
     public String toString() {
-        return "role [roleId=" + roleId + ", roleName=" + roleName + "]";
+        return "role [roleId=" + roleId + ", roleName=" + roleName  + "]";
     }
+ 
 
 }

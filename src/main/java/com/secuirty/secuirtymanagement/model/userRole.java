@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 
@@ -43,11 +45,19 @@ public class userRole  {
         Role = role;
     }
 
+    public long getUserRoleId() {
+        return userRoleId;
+    }
+
+    public void setUserRoleId(long userRoleId) {
+        this.userRoleId = userRoleId;
+    }
 
     @Override
     public String toString() {
-        return "userRole [Role=" + Role + ", User=" + User + ", userRoleId=" + userRoleId + "]";
+        return "userRole [Role=" + Role + "]";
     }
+
 
  
 }
